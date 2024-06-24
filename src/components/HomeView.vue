@@ -3,30 +3,37 @@
     <div>
       {{ count }} : {{ anotherCount }}
     </div>
-    <button @click="count++">Increment</button>
-    <button @click="method">print</button>
-    <div> {{ person.name }} : {{ person.age }}</div>
+    <q-btn @click="count++">Increment</q-btn>
+    <q-btn @click="counterStore.increment()">print</q-btn>
+    <div class="text-h4 q-ma-xl"> {{ person.name }} : {{ person.age }}</div>
     <input v-model="person.name">
-    <div> {{ name }}</div>
-    <input v-model="name">
+    <div>{{ title }}</div>
+    <div>{{ person }}</div>
+    <q-input v-model="name" type="text" class="q-ma-sm" />
     <button @click="submit">addName</button>
-    <div>{{ submittedNames }}</div>
-
-    <ul>
-      <li
-        v-for="subName in submittedNames"
-        :key="subName"
+    <div>{{ submittedNames }} {{ counterStore.doubleCount }}</div>
+    <q-list>
+      <q-item
+        v-for="(subName, index) in submittedNames"
+        :key="index"
       >
-        {{ subName }}
-      </li>
-    </ul>
+        <NameItem
+          :id="subName"
+          :name="subName"
+          :item-id="index"
+        />
+      </q-item>
+    </q-list>
   </div>
 </template>
 
 <script setup>
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import NameItem from 'components/NameItem.vue';
+import { useCounterStore } from 'stores/example-store';
 
+const counterStore = useCounterStore();
 
 const count = ref(0);
 const name = ref('empty');
@@ -42,5 +49,7 @@ const submit = () => {
   submittedNames.value.push(name.value);
   name.value = '';
 };
+
+const title = computed(() => `variable name is ${name.value}`);
 
 </script>
